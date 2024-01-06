@@ -35,7 +35,7 @@ int main(int argc, char **argv) {
 	  head -= 2;
 	  stack[head] = first - second;
 	  head++;
-	} else if (arg[0] == '*' && arg[1] == '\0') {
+	} else if (arg[0] == 'x' && arg[1] == '\0') {
 	  if (head < 2) {
 		printf("Provide more arguments!");
 		exit(EXIT_FAILURE);
@@ -68,6 +68,6 @@ int main(int argc, char **argv) {
 	}
   }
 
-  printf("%d", stack[head]);
+  printf("%d", stack[head - 1]);
   return 0;
 }
