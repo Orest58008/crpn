@@ -3,18 +3,44 @@
 #include <string.h>
 
 // Binary operators
-#define BINARY_COUNT 4
-int add(int a, int b) { return a + b; }
-int sub(int a, int b) { return a - b; }
-int mul(int a, int b) { return a * b; }
-int quo(int a, int b) { return a / b; }
+#define BINARY_COUNT 8
+int add (int a, int b) { return a + b; }
+int sub (int a, int b) { return a - b; }
+int mul (int a, int b) { return a * b; }
+int quo (int a, int b) { return a / b; }
+int and (int a, int b) { return a & b; }
+int or  (int a, int b) { return a | b; }
+int xor (int a, int b) { return a ^ b; }
+int expo(int a, int b) {
+  if (b < 0) {
+	return 1 / expo(a, b);
+  } else if (b == 0) {
+	return 1;
+  } else if (b == 1) {
+	return a;          // vvv
+  } else if (b == 2) {
+	return a * a;      // It is faster than to use cycles for everything
+  } else if (b == 3) {
+	return a * a * a;  // ^^^
+  } else {
+	int result = 1;
+
+	while (b != 0) {
+	  result *= a;
+	  b--;
+	}
+
+	return result;
+  }
+}
+
 typedef int (*binary)(int, int);
+char  *binary_names[BINARY_COUNT] = {"+",  "-",  "x",  "/",  "xx",  "and", "or", "xor"};
+binary binary_funcs[BINARY_COUNT] = {&add, &sub, &mul, &quo, &expo, &and,  &or,  &xor};
 
 int main(int argc, char **argv) {
   int stack[argc];
   int head = 0; // Head is the position of next element to be, not the last one, ktim
-  char *binary_names[BINARY_COUNT] = {"+", "-", "x", "/"};
-  binary binary_funcs[BINARY_COUNT] = {&add, &sub, &mul, &quo};
 
   for (int i = 1; i < argc; i++) {
 	char *arg = argv[i];
