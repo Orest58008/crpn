@@ -51,12 +51,8 @@ int main(int argc, char **argv) {
   float stack[argc];
   short head = 0; // Head is the position of next element to be, not the last one, ktim
 
-  for (short i = 1; i <= argc; i++) {
+  for (short i = 1; i < argc; i++) {
 	char *arg = argv[i];
-
-	if (arg == 0x0) {
-	  break;
-	}
 	
 	if (atof(arg) != 0) {
 	  stack[head] = atof(arg); head++;
