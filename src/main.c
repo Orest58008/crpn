@@ -12,20 +12,20 @@ int and (int a, int b) { return a & b; }
 int or  (int a, int b) { return a | b; }
 int xor (int a, int b) { return a ^ b; }
 int expo(int a, int b) {
-  if (b < 0) return 1 / expo(a, b);
-  else if (b == 0) return 1;
-  else if (b == 1) return a;         // vvv
-  else if (b == 2) return a * a;     // It is faster than to use cycles for everything
-  else if (b == 3) return a * a * a; // ^^^
-  else {
-	int result = 1;
-	while (b != 0) {
-      result *= a;
-	  b--;
-	}
-
-	return result;
+  if (a == 0) return 0;  
+  if (b < 0)  return 1 / expo(a, 0 - b);
+  
+  if (b == 0) return 1;  
+  if (b == 1) return a;         // vvv
+  if (b == 2) return a * a;     // It is faster than to use cycles for everything
+  if (b == 3) return a * a * a; // ^^^
+  
+  int result = 1;
+  while (b != 0) {
+	result *= a;
+	b--;
   }
+  return result;
 }
 
 typedef int (*binary)(int, int);
