@@ -1,55 +1,66 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#include <math.h>
 
 // Binary operators
 #define BINARY_COUNT 8
-int add (int a, int b) { return a + b; }
-int sub (int a, int b) { return a - b; }
-int mul (int a, int b) { return a * b; }
-int quo (int a, int b) { return a / b; }
-int and (int a, int b) { return a & b; }
-int or  (int a, int b) { return a | b; }
-int xor (int a, int b) { return a ^ b; }
-int expo(int a, int b) {
+float add (float a, float b) { return a + b; }
+float sub (float a, float b) { return a - b; }
+float mul (float a, float b) { return a * b; }
+float quo (float a, float b) { return a / b; }
+float expo(float a, float b) {
   if (a == 0) return 0;  
-  if (b < 0)  return 1 / expo(a, 0 - b);
+  if (b < 0)  return 1 / powf(a, 0 - b);
   
   if (b == 0) return 1;  
   if (b == 1) return a;         // vvv
   if (b == 2) return a * a;     // It is faster than to use cycles for everything
   if (b == 3) return a * a * a; // ^^^
-  
-  int result = 1;
-  while (b != 0) {
-	result *= a;
-	b--;
-  }
-  return result;
+
+  return powf(a, b);
 }
 
-typedef int (*binary)(int, int);
-char  *binary_names[BINARY_COUNT] = { "+",  "-",  "x",  "/",  "xx",  "and", "or", "xor" };
-binary binary_funcs[BINARY_COUNT] = { &add, &sub, &mul, &quo, &expo, &and,  &or,  &xor  };
+typedef float (*binary)(float, float);
+char  *binary_names[BINARY_COUNT] = { "+",  "-",  "x",  "/",  "xx"  };
+binary binary_funcs[BINARY_COUNT] = { &add, &sub, &mul, &quo, &expo };
 
 // Unary operators
-#define UNARY_COUNT 1
-int neg(int a) { return ~a; }
+#define UNARY_COUNT 3
+float fsin(float a) { return sin(a); }
+float fcos(float a) { return cos(a); }
+float ftan(float a) { return tan(a); }
 
-typedef int (*unary)(int);
-char *unary_names[UNARY_COUNT] = { "~"  };
-unary unary_funcs[UNARY_COUNT] = { &neg };
+typedef float (*unary)(float);
+char *unary_names[UNARY_COUNT] = { "sin", "cos", "tan" };
+unary unary_funcs[UNARY_COUNT] = { &fsin, &fcos, &ftan };
+
+// A function to check if string is representing a zero
+int is_zero(char *str) {
+  for (int i = 0; str[i] != '\0'; i++) {
+	if (str[i] != '0' && str[i] != '.') {
+	  return 0;
+	}
+  }
+
+  return 1;
+}
+
 
 int main(int argc, char **argv) {
-  int stack[argc];
+  float stack[argc];
   short head = 0; // Head is the position of next element to be, not the last one, ktim
 
-  for (short i = 1; i < argc; i++) {
+  for (short i = 1; i <= argc; i++) {
 	char *arg = argv[i];
 
-	if (atoi(arg) != 0) {
-	  stack[head] = atoi(arg); head++;
-	} else if (arg[0] == '0' && arg[1] == '\0') { // Check if arg is 0
+	if (arg == 0x0) {
+	  break;
+	}
+	
+	if (atof(arg) != 0) {
+	  stack[head] = atof(arg); head++;
+	} else if (is_zero(arg)) { // Check if arg is 0
 	  stack[head] = 0;         head++;
 	} else {
 	  short flag = 0;
@@ -66,6 +77,7 @@ int main(int argc, char **argv) {
 		  head++;
 
 		  flag = 1;
+		  break;
 		}
 	  }
 
@@ -81,6 +93,7 @@ int main(int argc, char **argv) {
 		  head++;
 
 		  flag = 1;
+		  break;
 		}
 	  }
 
@@ -98,6 +111,6 @@ int main(int argc, char **argv) {
 	printf("Too many arguments!"); return 1;
   }
 
-  printf("%d", stack[head - 1]);
+  printf("%g\n", stack[head - 1]);
   return 0;
 }
