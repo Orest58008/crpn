@@ -65,7 +65,7 @@ int main(int argc, char **argv) {
 	  for (short j = 0; j < BINARY_COUNT; j++) {
 		if (!strcmp(binary_names[j], arg)) {
 		  if (head < 2) {
-			printf("Provide more arguments!"); return 1;
+			fprintf(stderr, "Provide more arguments!\n"); return 1;
 		  }
 		  
 		  head -= 2;
@@ -81,7 +81,7 @@ int main(int argc, char **argv) {
 	  for (short j = 0; j < UNARY_COUNT; j++) {
 		if (!strcmp(unary_names[j], arg)) {
 		  if (head < 1) {
-			printf("Provide more arguments!"); return 1;
+			fprintf(stderr, "Provide more arguments!\n"); return 1;
 		  }
 
 		  head--;
@@ -94,19 +94,19 @@ int main(int argc, char **argv) {
 	  }
 
 	  if (!flag) {
-		printf("Invalid operator `%s`!", arg); return 1;
+		fprintf(stderr, "Invalid operator `%s`!\n", arg); return 1;
 	  }
 	}
 
 	if (head > argc / 2) {
-	  printf("Too many arguments!"); return 1;
+	  fprintf(stderr, "Too many arguments!\n"); return 1;
 	}
   }
 
   if (head > 1) {
-	printf("Too many arguments!"); return 1;
+	fprintf(stderr, "Too many arguments!\n"); return 1;
   }
 
-  printf("%g\n", stack[head - 1]);
+  printf("%G\n", stack[head - 1]);
   return 0;
 }
