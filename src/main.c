@@ -9,31 +9,17 @@ float add (float a, float b) { return a + b; }
 float sub (float a, float b) { return a - b; }
 float mul (float a, float b) { return a * b; }
 float quo (float a, float b) { return a / b; }
-float expo(float a, float b) {
-  if (a == 0) return 0;  
-  if (b < 0)  return 1 / powf(a, 0 - b);
-  
-  if (b == 0) return 1;  
-  if (b == 1) return a;         // vvv
-  if (b == 2) return a * a;     // It is faster than to use cycles for everything
-  if (b == 3) return a * a * a; // ^^^
-
-  return powf(a, b);
-}
 
 typedef float (*binary)(float, float);
 char  *binary_names[BINARY_COUNT] = { "+",  "-",  "x",  "/",  "xx"  };
-binary binary_funcs[BINARY_COUNT] = { &add, &sub, &mul, &quo, &expo };
+binary binary_funcs[BINARY_COUNT] = { &add, &sub, &mul, &quo, &powf };
 
 // Unary operators
 #define UNARY_COUNT 3
-float fsin(float a) { return sin(a); }
-float fcos(float a) { return cos(a); }
-float ftan(float a) { return tan(a); }
 
-typedef float (*unary)(float);
+typedef double (*unary)(double);
 char *unary_names[UNARY_COUNT] = { "sin", "cos", "tan" };
-unary unary_funcs[UNARY_COUNT] = { &fsin, &fcos, &ftan };
+unary unary_funcs[UNARY_COUNT] = { &sin,  &cos,  &tan  };
 
 // A function to check if string is representing a zero
 int is_zero(char *str) {
@@ -96,10 +82,6 @@ int main(int argc, char **argv) {
 	  if (!flag) {
 		fprintf(stderr, "Invalid operator `%s`!\n", arg); return 1;
 	  }
-	}
-
-	if (head > argc / 2) {
-	  fprintf(stderr, "Too many arguments!\n"); return 1;
 	}
   }
 
